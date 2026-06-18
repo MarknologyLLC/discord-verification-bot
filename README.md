@@ -1,25 +1,56 @@
-# Discord Verification Bot
+# Marknology Discord Verification Bot
 
-Standalone verification bot for the Marknology TikTok Shop creator and affiliate community on Discord.
+Handles creator applications for the Marknology TikTok Shop creator community on Discord.
 
-## Purpose
+## What it does
 
-Gates entry to the Marknology HQ Discord server. Verifies creators and affiliates before granting access to community channels.
+- Posts a public verification panel with a "Create ticket" button
+- Opens a private ticket channel for each applicant
+- Walks applicants through questions one at a time:
+  1. Email
+  2. First and last name
+  3. TikTok handle
+  4. How they heard about us
+- Validates TikTok handles (@username and profile URLs pass, bare usernames rejected)
+- Saves completed applications
+- Posts completed applications to a staff log channel
+- `/approve @member` -- grants the verified role
+- `/close` -- closes and deletes the ticket channel
+- `/export_creators` -- admin-only export of applications
+
+## Repo structure
+
+```
+discord-verification-bot/
+  bot.py                  -- main bot entry point
+  requirements.txt        -- Python dependencies
+  .env.example            -- environment variable template (no secrets)
+  .gitignore              -- keeps secrets and applicant data out of git
+  docs/
+    deployment.md         -- how to deploy
+    local-development.md  -- how to run locally
+    review-process.md     -- PR review gate with Winston
+```
+
+## Security rules
+
+- Never commit `.env`
+- Never commit real bot tokens, Discord tokens, server IDs, role IDs, or channel IDs
+- Never commit `creators.json` (contains applicant emails -- private)
+- Never commit exported applicant files
 
 ## Development workflow
 
-Paul Baron (PaulbCatalyst) builds features via Codex and opens PRs here.
-Winston (MarknologyLLC) reviews every PR automatically and posts structured verdicts to `#dev-collab` in Discord.
+Paul Baron (PaulbCatalyst) builds via Codex and opens PRs here.
+Winston (MarknologyLLC) reviews every PR automatically.
 Drew approves and squash merges after APPROVED verdict.
+Review results post to `#dev-collab` in Marknology HQ Discord.
 
-## Merge policy
+## Setup
 
-Squash merges only. No direct pushes to main. All changes via PR.
-
-## Review gate
-
-Every PR triggers a Winston review posted to:
-- Discord `#dev-collab` in the `CREATOR COMMUNITY` category
-- GitHub PR as an official review (APPROVE / REQUEST_CHANGES)
-
-Use `PR-DESCRIPTION-TEMPLATE.md` when opening PRs for tighter Winston reviews.
+```bash
+cp .env.example .env
+# fill in your values
+pip install -r requirements.txt
+python bot.py
+```
